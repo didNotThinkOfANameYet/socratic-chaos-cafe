@@ -223,6 +223,13 @@ You are now 72% more enlightened, 34% more confused, and 100% still my favourite
             question: questions[currentQuestion],
             answer: answer
           })
+        })
+        .then(response => response.text())
+        .then(data => {
+          console.log("Response:", data);
+        })
+        .catch(error => {
+          console.error("Error:", error);
         });
 
         input.value = "";
