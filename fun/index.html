@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Socratic Simulator: Dishita's Chaos Café</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(to right, #ae7a96, #f1daff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #ffffffcc;
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      width: 90%;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Patrick Hand', cursive;
+      font-size: 2.8rem;
+      color: #70078d;
+      margin-bottom: 10px;
+    }
+
+    #intro {
+      font-size: 1.2rem;
+      color: #5c5c5c;
+      margin-bottom: 20px;
+    }
+
+    .question-box {
+      background-color: #ffe9f3;
+      border: 3px dashed #ff99c8;
+      padding: 20px;
+      border-radius: 20px;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .question-image {
+      width: 300px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 2px 4px 12px rgba(0,0,0,0.15);
+      margin-bottom: 15px;
+      border: 5px double #ff9ae2;
+    }
+
+    button {
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 1rem;
+      background: linear-gradient(45deg, #ffd6e0, #c1c8ff);
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #ffc3d1, #aeb8ff);
+    }
+
+    #response, #input-area {
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      margin-top: 10px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="intro-section">
+      <h1>Dishita's Socratic Chaos Café</h1>
+      <p id="intro">Where the questions are weird, and the answers might haunt you. Choose wisely, or chaotically.</p>
+      <button onclick="startGame()">Start</button>
+    </div>
+
+    <div id="question-section" class="question-box" style="display:none;">
+      <img id="question-image" class="question-image" src="" alt="question visual">
+      <p id="question"></p>
+      <button onclick="answerIt()">Answer It</button>
+      <button onclick="overthinkIt()">Overthink It</button>
+    </div>
+
+    <div id="response"></div>
+    <div id="input-area" style="display:none;">
+      <input type="text" id="answer-input" placeholder="Type your answer here...">
+      <button onclick="submitAnswer()">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      "White chocolate vs dark chocolate (it’s more like you vs me): Who’s more likely to survive in a Kafka novel?",
+      "Your brain gets turned into a bakery. What’s the bestseller item called?",
+      "Your hair is now the main character in a Dostoevsky novel. Title it.",
+      "Rohit Sharma drops a catch. Justify it using an existential quote.",
+      "If you had to date a Friends character, who would it be — and why are they problematic?",
+      "You're stuck in a murder mystery — who do you suspect first and why?",
+      "“We were on a break” — defend or destroy the statement in court.",
+      "The beach or binge-watching Friends — what’s your soul craving right now?",
+      "What dessert would Kafka invent and why would no one understand it?",
+      "Describe your vibe as a rom-com movie title.",
+      "Which Friends character would fail miserably in a Dostoevsky novel?"
+    ];
+
+    const answerItResponses = [
+      "This is a chocolate-coated identity crisis. Enlighten me.",
+      "Serve that chaos on a tray. I’m ready.",
+      "The mane event. Let’s go.",
+      "Philosophize this fumble, professor.",
+      "It has to be Monica!",
+      "Give me drama. Give me motive.",
+      "Your Honor, I present chaotic reasoning.",
+      "Choose wisely. Chandler is watching.",
+      "Serve me absurdity with a cherry on top.",
+      "lets go for something painfully cute.",
+      "Yes, I want crossover drama."
+    ];
+
+    const overthinkResponses = [
+      "Its Dark Chocolate for win!",
+      "Overthinking smells like burnt croissants and regret.",
+      "It’s giving CRIME AND CONDITIONER.",
+      "Catch dropped, but purpose found. Maybe.",
+      "Come on man Monica is the one!",
+      "In my defence: I am a sleeper cell. I cannot be the murderer!",
+      "They were clearly on a break dumb!",
+      "You’re tanning AND anxious.",
+      "Idk the dessert gets headache because of you!",
+      "My narcissist boy couldnt even do this simple thing?",
+      "It’s Ross. Always Ross."
+    ];
+
+    const imageSuggestions = [
+      "./images/1.png",
+      "./images/2.jpg",
+      "images/3.jpg",
+      "images/4.jpeg",
+      "images/5.jpeg",
+      "images/6.jpg",
+      "images/7.png",
+      "images/8.jpeg",
+      "images/9.jpg",
+      "images/10.jpg",
+      "images/11.jpg"
+    ];
+
+    let currentQuestion = 0;
+
+    function startGame() {
+      document.getElementById("intro-section").style.display = "none";
+      document.getElementById("question-section").style.display = "block";
+      document.getElementById("response").innerText = "";
+      document.getElementById("input-area").style.display = "none";
+      currentQuestion = 0;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if (currentQuestion < questions.length) {
+        document.getElementById("question").innerText = questions[currentQuestion];
+        document.getElementById("question-image").src = imageSuggestions[currentQuestion];
+      } else {
+        document.getElementById("question-section").style.display = "none";
+        document.getElementById("response").innerHTML = `<h3>You have completed Level 1 of the Socratic Gauntlet.
+You are now 72% more enlightened, 34% more confused, and 100% still my favourite beach philosopher.</h3>`;
+      }
+    }
+
+    function answerIt() {
+      document.getElementById("response").innerText = answerItResponses[currentQuestion];
+      document.getElementById("input-area").style.display = "block";
+    }
+
+    function overthinkIt() {
+      document.getElementById("response").innerText = overthinkResponses[currentQuestion];
+      document.getElementById("input-area").style.display = "none";
+      setTimeout(() => {
+        document.getElementById("response").innerText = "";
+        currentQuestion++;
+        showQuestion();
+      }, 2000);
+    }
+
+    function submitAnswer() {
+      const input = document.getElementById("answer-input");
+      const answer = input.value.trim();
+      if (answer !== "") {
+        fetch("https://script.google.com/macros/s/AKfycbxxm331CK03LjanxOuWo3i1IlJsq2mLBVlXpj60vQ2AqVVe69v9Y5m_L2IqrFeEI-g/exec", {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            question: questions[currentQuestion],
+            answer: answer
+          })
+        });
+
+        input.value = "";
+        document.getElementById("input-area").style.display = "none";
+        document.getElementById("response").innerText = "";
+        currentQuestion++;
+        showQuestion();
+      }
+    }
+  </script>
+</body>
+</html>
