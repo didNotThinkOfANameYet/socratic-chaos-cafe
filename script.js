@@ -41,17 +41,17 @@ const overthinkResponses = [
 ];
 
 const imageSuggestions = [
-    "./images/1.png",
-    "./images/2.jpg",
-    "images/3.jpg",
-    "images/4.jpeg",
-    "images/5.jpeg",
-    "images/6.jpg",
-    "images/7.png",
-    "images/8.jpeg",
-    "images/9.jpg",
-    "images/10.jpg",
-    "images/11.jpg"
+    "1.png",
+    "2.jpg",
+    "3.jpg",
+    "4.jpeg",
+    "5.jpeg",
+    "6.jpg",
+    "7.png",
+    "8.jpeg",
+    "9.jpg",
+    "10.jpg",
+    "11.jpg"
 ];
 
 let currentQuestion = 0;
